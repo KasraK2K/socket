@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+
+    <script>
+      $(function () {
+        var username = prompt("what is your name");
+        var socket = io();
+        $("form").submit(function (e) {
+          e.preventDefault(); // prevents page reloading
+          socket.emit("chat message", {
+            message: $("#m").val(),
+            username: username,
+          });
+          $("#m").val("");
+          return false;
+        });
+
+        socket.emit("username", username);
+
+        socket.on("some event", function (data) {
+          console.log("some event", data);
+        });
+
+        socket.on("user is connected", (msg) => {
+          $("#messages").append($("<li>").text(msg));
+        });
+
+        socket.on("user is disconnected", (msg) => {
+          $("#messages").append($("<li>").text(msg));
+        });
+
+        socket.on("chat message", function (msg) {
+          $("#messages").append(
+            $("<li>").text(`${msg.username}: ${msg.message}`);
+          );
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+      });
+    </script>
+  </body>
+</html>

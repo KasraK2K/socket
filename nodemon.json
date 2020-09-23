@@ -1,0 +1,6 @@
+{
+  "watch": ["./**/*"],
+  "ignore": [],
+  "ext": ".js,.ts,.ejs",
+  "exec": "node server.js"
+}
